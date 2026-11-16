@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CMS Servicios Generales Refrigeración | Instalación y Reparación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { brand: { 50: '#eef8ff', 100: '#d8efff', 500: '#0088cc', 600: '#006699', 700: '#004f77', 900: '#002b42' } } } } }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>[x-cloak] { display: none !important; }</style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-[100dvh] flex flex-col justify-between" x-data="app()">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 bg-brand-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                    <i class="fa-solid fa-snowflake text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight leading-tight">CMS SERVICIOS GENERALES</h1>
+                    <p class="text-xs font-semibold text-brand-600 tracking-wider">REFRIGERACIÓN</p>
+                </div>
+            </a>
+            <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+                <a href="#servicios" class="hover:text-brand-600">Servicios</a>
+                <a href="#reserva" @click.prevent="openBookingModal()" class="text-brand-600 font-semibold">Pedir Turno</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO Y SERVICIOS (Acortado visualmente para el ejemplo, asegurate de copiar los del código anterior aquí) -->
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="bg-slate-900 text-white py-16 px-4 text-center">
+            <h2 class="text-3xl sm:text-5xl font-extrabold mb-6">Climatización experta</h2>
+            <button @click="openBookingModal()" class="px-8 py-4 bg-brand-500 text-white font-bold rounded-xl mb-4">Solicitar Turno Ahora</button>
+            <a href="https://wa.me/5493402440000" target="_blank" class="px-8 py-4 border border-white/20 rounded-xl inline-flex items-center gap-2"><i class="fa-brands fa-whatsapp text-green-400"></i> Consulta Rápida</a>
+        </section>
+
+        <!-- SECCIÓN SERVICIOS -->
+        <section id="servicios" class="py-16 px-4 max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Instalación -->
+                <div class="bg-white p-6 border rounded-2xl shadow-sm text-center">
+                    <h4 class="font-bold mb-2">Instalación Split</h4>
+                    <button @click="selectServiceAndBook('Instalación')" class="w-full py-2 bg-slate-100 text-sm font-semibold rounded-xl">Reservar</button>
+                </div>
+                <!-- Reparación -->
+                <div class="bg-white p-6 border rounded-2xl shadow-sm text-center">
+                    <h4 class="font-bold mb-2">Reparación y Carga</h4>
+                    <button @click="selectServiceAndBook('Reparación')" class="w-full py-2 bg-slate-100 text-sm font-semibold rounded-xl">Reservar</button>
+                </div>
+                <!-- Mantenimiento -->
+                <div class="bg-white p-6 border rounded-2xl shadow-sm text-center">
+                    <h4 class="font-bold mb-2">Mantenimiento</h4>
+                    <button @click="selectServiceAndBook('Mantenimiento')" class="w-full py-2 bg-slate-100 text-sm font-semibold rounded-xl">Reservar</button>
+                </div>
+                <!-- Desinstalación -->
+                <div class="bg-white p-6 border rounded-2xl shadow-sm text-center">
+                    <h4 class="font-bold mb-2">Desinstalación</h4>
+                    <button @click="selectServiceAndBook('Desinstalación')" class="w-full py-2 bg-slate-100 text-sm font-semibold rounded-xl">Reservar</button>
+                </div>
+                <!-- Desinstalación e Instalación en mismo dom -->
+                <div class="bg-white p-6 border rounded-2xl shadow-sm text-center">
+                    <h4 class="font-bold mb-2 text-sm">Desinst. + Inst. (Mismo Domicilio)</h4>
+                    <button @click="selectServiceAndBook('Mudanza Equipo Mismo Domicilio')" class="w-full py-2 bg-slate-100 text-sm font-semibold rounded-xl">Reservar</button>
+                </div>
+                <!-- Desinstalación e Instalación en otro dom -->
+                <div class="bg-white p-6 border rounded-2xl shadow-sm text-center">
+                    <h4 class="font-bold mb-2 text-sm">Desinst. + Inst. (Otro Domicilio)</h4>
+                    <button @click="selectServiceAndBook('Mudanza Equipo Otro Domicilio')" class="w-full py-2 bg-slate-100 text-sm font-semibold rounded-xl">Reservar</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER CON MARGEN EXTRA PARA LA RUEDITA -->
+    <footer class="bg-white border-t py-8 px-4 text-slate-500 pb-24">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <p class="font-bold text-xs">CMS SERVICIOS GENERALES</p>
+            <button @click="openAdminLogin()" class="p-2 text-slate-400 hover:text-brand-600"><i class="fa-solid fa-gear text-xl"></i></button>
+        </div>
+    </footer>
+
+    <!-- BOTÓN WHATSAPP FLOTANTE -->
+    <a href="https://wa.me/5493402440000" target="_blank" class="fixed bottom-6 right-6 z-30 w-14 h-14 bg-emerald-500 text-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 text-2xl"><i class="fa-brands fa-whatsapp"></i></a>
+
+    <!-- MODAL DE RESERVA -->
+    <div x-show="bookingModalOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur overflow-y-auto">
+        <div @click.away="bookingModalOpen = false" class="bg-white rounded-3xl max-w-lg w-full p-6 relative">
+            <button @click="bookingModalOpen = false" class="absolute top-4 right-4 text-slate-400 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-2xl font-bold mb-4">Reservar Servicio</h3>
+            
+            <form @submit.prevent="submitBooking()" class="space-y-3">
+                <input type="text" x-model="form.name" required placeholder="Nombre Completo" class="w-full px-4 py-2 border rounded-xl">
+                <input type="tel" x-model="form.phone" required placeholder="Teléfono" class="w-full px-4 py-2 border rounded-xl">
+                
+                <select x-model="form.service" required class="w-full px-4 py-2 border rounded-xl bg-white">
+                    <option value="">Seleccionar Servicio...</option>
+                    <option value="Instalación">Instalación Split</option>
+                    <option value="Reparación">Reparación / Carga de Gas</option>
+                    <option value="Mantenimiento">Mantenimiento Preventivo</option>
+                    <option value="Desinstalación">Desinstalación</option>
+                    <option value="Mudanza Equipo Mismo Domicilio">Desinstalación + Instalación (Mismo domicilio)</option>
+                    <option value="Mudanza Equipo Otro Domicilio">Desinstalación + Instalación (Otro domicilio)</option>
+                </select>
+
+                <select x-model="form.refrigerant" class="w-full px-4 py-2 border rounded-xl bg-white">
+                    <option value="No sé">Tipo de Gas: No sé / No aplica</option>
+                    <option value="R410A">R410A</option>
+                    <option value="R32">R32</option>
+                    <option value="R22">R22</option>
+                </select>
+
+                <div class="flex gap-2">
+                    <input type="date" x-model="form.date" required class="w-1/2 px-4 py-2 border rounded-xl">
+                    <select x-model="form.timeSlot" required class="w-1/2 px-4 py-2 border rounded-xl bg-white">
+                        <option value="">Horario...</option>
+                        <option value="Mañana">Mañana</option>
+                        <option value="Tarde">Tarde</option>
+                    </select>
+                </div>
+                
+                <input type="text" x-model="form.address" required placeholder="Dirección Exacta" class="w-full px-4 py-2 border rounded-xl">
+                <textarea x-model="form.notes" rows="2" placeholder="Notas/Problema del equipo" class="w-full px-4 py-2 border rounded-xl"></textarea>
+                
+                <button type="submit" class="w-full py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl flex items-center justify-center gap-2">
+                    <span x-show="!isSubmitting"><i class="fa-brands fa-whatsapp text-xl"></i> Confirmar y Enviar</span>
+                    <span x-show="isSubmitting"><i class="fa-solid fa-spinner fa-spin"></i> Procesando...</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PANEL ADMIN LOGIN -->
+    <div x-show="adminLoginModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center">
+            <h3 class="font-bold mb-4">Ingreso cPanel Admin</h3>
+            <input type="password" x-model="adminPasswordInput" placeholder="Contraseña (1234)" class="w-full p-3 border rounded-xl mb-4 text-center">
+            <button @click="verifyAdminPassword()" class="w-full p-3 bg-slate-900 text-white rounded-xl font-bold">Entrar</button>
+            <button @click="adminLoginModal = false" class="text-sm mt-4 text-slate-500">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- PANEL ADMIN COMPLETO -->
+    <div x-show="adminPanelOpen" x-cloak class="fixed inset-0 z-50 bg-slate-900 flex flex-col">
+        <header class="bg-slate-800 p-4 flex justify-between items-center text-white">
+            <h3 class="font-bold">cPanel Admin (Sincronizado con Google Sheets)</h3>
+            <div class="flex gap-2">
+                <button @click="fetchAppointments()" class="px-4 py-2 bg-brand-500 rounded-lg text-sm"><i class="fa-solid fa-rotate-right"></i> Recargar</button>
+                <button @click="adminPanelOpen = false" class="px-4 py-2 bg-slate-700 rounded-lg text-sm">Salir</button>
+            </div>
+        </header>
+
+        <div class="p-6 overflow-auto text-white flex-grow">
+            <div x-show="loadingAdmin" class="text-center py-12"><i class="fa-solid fa-spinner fa-spin text-4xl text-brand-500"></i><p class="mt-4">Cargando base de datos...</p></div>
+            
+            <table class="w-full text-left text-sm" x-show="!loadingAdmin">
+                <thead class="bg-slate-800 text-slate-400">
+                    <tr><th>Cliente</th><th>Servicio / Gas</th><th>Fecha</th><th>Ubicación</th><th>Estado</th><th>Eliminar</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-700">
+                    <template x-for="app in appointments" :key="app.rowIndex">
+                        <tr class="hover:bg-slate-800 transition-colors">
+                            <td class="p-3"><strong x-text="app.name"></strong><br><span class="text-xs text-slate-400" x-text="app.phone"></span></td>
+                            <td class="p-3"><span class="text-brand-400" x-text="app.service"></span><br><span class="text-xs">Gas: <span x-text="app.refrigerant"></span></span></td>
+                            <td class="p-3"><span x-text="app.date"></span><br><span class="text-xs" x-text="app.timeSlot"></span></td>
+                            <td class="p-3 text-xs" x-text="app.address"></td>
+                            <td class="p-3">
+                                <select x-model="app.status" @change="updateStatus(app)" class="bg-slate-900 border border-slate-700 rounded p-1 text-xs">
+                                    <option value="Pendiente">Pendiente</option>
+                                    <option value="Confirmado">Confirmado</option>
+                                    <option value="Completado">Completado</option>
+                                </select>
+                            </td>
+                            <td class="p-3">
+                                <button @click="deleteAppointment(app)" class="text-red-400 hover:text-red-300 p-2"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- LOGICA SCRIPT -->
+    <script>
+        // ========================================================
+        // PEGAR LA URL DE GOOGLE APPS SCRIPT AQUÍ (PASO 2)
+        // ========================================================
+        const GOOGLE_SCRIPT_URL = 'URL_DE_TU_SCRIPT_AQUI'; 
+
+        function app() {
+            return {
+                bookingModalOpen: false, adminLoginModal: false, adminPanelOpen: false,
+                adminPasswordInput: '', isSubmitting: false, loadingAdmin: false,
+                form: { name: '', phone: '', service: '', refrigerant: 'No sé', date: '', timeSlot: '', address: '', notes: '', status: 'Pendiente' },
+                appointments: [],
+
+                openBookingModal() { this.bookingModalOpen = true; },
+                selectServiceAndBook(serviceName) { this.form.service = serviceName; this.openBookingModal(); },
+
+                async submitBooking() {
+                    this.isSubmitting = true;
+
+                    // 1. Enviar datos a Google Sheets en segundo plano sin bloquear al usuario
+                    if(GOOGLE_SCRIPT_URL !== 'URL_DE_TU_SCRIPT_AQUI') {
+                        fetch(GOOGLE_SCRIPT_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({ action: 'add', ...this.form })
+                        }).catch(e => console.error(e));
+                    }
+
+                    // 2. Armar mensaje de WhatsApp
+                    const msg = `*NUEVO TURNO WEB*%0A👤 ${this.form.name}%0A📞 ${this.form.phone}%0A🛠 ${this.form.service}%0A❄️ Gas: ${this.form.refrigerant}%0A📅 ${this.form.date} (${this.form.timeSlot})%0A📍 ${this.form.address}`;
+                    
+                    // 3. Abrir WhatsApp inmediatamente
+                    window.open(`https://wa.me/5493402440000?text=${msg}`, '_blank');
+                    
+                    this.bookingModalOpen = false;
+                    this.isSubmitting = false;
+                    this.form = { name: '', phone: '', service: '', refrigerant: 'No sé', date: '', timeSlot: '', address: '', notes: '', status: 'Pendiente' };
+                },
+
+                openAdminLogin() { this.adminPasswordInput = ''; this.adminLoginModal = true; },
+                verifyAdminPassword() {
+                    if (this.adminPasswordInput === '1234' || this.adminPasswordInput === 'admin') {
+                        this.adminLoginModal = false; this.adminPanelOpen = true; this.fetchAppointments();
+                    } else { alert("Contraseña incorrecta"); }
+                },
+
+                async fetchAppointments() {
+                    this.loadingAdmin = true;
+                    if(GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbyqua5IYCHBxQ1VYztOOIQJ2W_40lS8ufP4ej6L2I89rPSFOhT7nx7urt23TCjfus53/exec') {
+                        alert("Falta colocar la URL de Google Apps Script en el código.");
+                        this.loadingAdmin = false;
+                        return;
+                    }
+                    try {
+                        const res = await fetch(GOOGLE_SCRIPT_URL);
+                        this.appointments = await res.json();
+                    } catch(e) { console.error(e); }
+                    this.loadingAdmin = false;
+                },
+
+                async updateStatus(app) {
+                    await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST', body: JSON.stringify({ action: 'updateStatus', rowIndex: app.rowIndex, status: app.status })
+                    });
+                },
+
+                async deleteAppointment(app) {
+                    if(confirm("¿Borrar este turno de la base de datos?")) {
+                        await fetch(GOOGLE_SCRIPT_URL, {
+                            method: 'POST', body: JSON.stringify({ action: 'delete', rowIndex: app.rowIndex })
+                        });
+                        this.appointments = this.appointments.filter(a => a.rowIndex !== app.rowIndex);
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
