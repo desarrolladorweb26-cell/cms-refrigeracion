@@ -3,142 +3,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>CMS Servicios Generales Refrigeración</title>
+    <title>CMS SERVICIOS GENERALES REFRIGERACIÓN | Instalación y Reparación</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { theme: { extend: { colors: { brand: { 50: '#eef8ff', 100: '#d8efff', 500: '#0088cc', 600: '#006699', 700: '#004f77', 900: '#002b42' } } } } }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef8ff',
+                            100: '#d8efff',
+                            400: '#38bdf8',
+                            500: '#0088cc',
+                            600: '#006699',
+                            700: '#004f77',
+                            900: '#002b42'
+                        }
+                    }
+                }
+            }
+        }
     </script>
+
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <style>[x-cloak] { display: none !important; }</style>
+
+    <style>
+        [x-cloak] { display: none !important; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-[100dvh] flex flex-col justify-between" x-data="app()">
+
+    <!-- NOTIFICACIÓN FLOTANTE (TOAST) -->
+    <div x-show="toast.show" x-cloak x-transition
+         class="fixed top-24 right-4 z-[70] max-w-sm px-4 py-3 rounded-xl shadow-xl border text-sm font-semibold flex items-center gap-3"
+         :class="toast.type === 'error' ? 'bg-red-600 text-white border-red-500' : 'bg-slate-900 text-white border-slate-700'">
+        <i class="fa-solid" :class="toast.type === 'error' ? 'fa-circle-exclamation text-red-200' : 'fa-circle-check text-emerald-400'"></i>
+        <span x-text="toast.message"></span>
+    </div>
 
     <!-- HEADER DINÁMICO -->
     <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <a href="#" class="flex items-center gap-3 group">
-                <div class="w-11 h-11 bg-brand-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                <div class="w-11 h-11 bg-brand-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
                     <i class="fa-solid fa-snowflake text-xl"></i>
                 </div>
                 <div>
-                    <h1 x-text="config.headerTitle" class="text-sm sm:text-base font-bold text-slate-900 tracking-tight leading-tight"></h1>
+                    <h1 x-text="config.headerTitle" class="text-xs sm:text-base font-bold text-slate-900 tracking-tight leading-tight"></h1>
                     <p x-text="config.headerSubtitle" class="text-xs font-semibold text-brand-600 tracking-wider"></p>
                 </div>
             </a>
             <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+                <a href="#galeria" class="hover:text-brand-600 transition-colors">Trabajos</a>
                 <a href="#servicios" class="hover:text-brand-600 transition-colors">Servicios</a>
+                <a href="#resenas" class="hover:text-brand-600 transition-colors">Reseñas</a>
                 <a href="#reserva" @click.prevent="openBookingModal()" class="text-brand-600 font-semibold hover:text-brand-700">Pedir Turno</a>
             </nav>
         </div>
     </header>
 
     <main class="flex-grow">
+
         <!-- HERO SECTION -->
-        <section class="bg-slate-900 text-white py-16 px-4 text-center relative overflow-hidden">
+        <section class="relative bg-gradient-to-br from-slate-900 via-slate-800 to-brand-900 text-white py-16 sm:py-24 px-4 overflow-hidden">
             <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
-            <div class="relative z-10 max-w-4xl mx-auto">
-                <h2 class="text-3xl sm:text-5xl font-extrabold mb-6 leading-tight">Climatización experta para tu hogar o comercio</h2>
-                <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-                    <button @click="openBookingModal()" class="px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+            <div class="max-w-4xl mx-auto text-center relative z-10">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 border border-brand-400/30 text-brand-300 text-xs sm:text-sm font-medium mb-6">
+                    <i class="fa-solid fa-shield-halved"></i> Servicio Técnico Profesional y Garantizado
+                </span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-6 leading-tight">
+                    Climatización experta para tu <span class="text-brand-400">hogar o comercio</span>
+                </h2>
+                <p class="text-base sm:text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
+                    Instalación profesional, reparación especializada de equipos split, traslados, cargas de gas (R22, R410A, R32) y mantenimiento preventivo.
+                </p>
+
+                <!-- Botón de reserva azul centrado debajo de la presentación -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button @click="openBookingModal()" class="w-full sm:w-auto px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 transition-all flex items-center justify-center gap-3 text-base">
                         <i class="fa-solid fa-calendar-check text-lg"></i> Solicitar Turno Ahora
                     </button>
-                    <!-- ENLACE WHATSAPP ACTUALIZADO AL TELÉFONO REAL -->
-                    <a href="https://wa.me/5493402575870?text=Hola,%20necesito%20consultar%20por%20un%20servicio%20de%20refrigeración." target="_blank" class="px-8 py-4 border border-white/20 hover:bg-white/10 rounded-xl inline-flex items-center justify-center gap-2 transition-all font-semibold">
-                        <i class="fa-brands fa-whatsapp text-green-400 text-xl"></i> Consulta Rápida
+                    <a href="https://wa.me/5493402575870?text=Hola,%20necesito%20consultar%20por%20un%20servicio%20de%20refrigeración." target="_blank" class="w-full sm:w-auto px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl border border-white/20 transition-all flex items-center justify-center gap-3 text-base">
+                        <i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i> Consulta Rápida
                     </a>
+                </div>
+
+                <!-- Métricas de confianza -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-12 pt-12 border-t border-slate-700/60 text-left max-w-2xl mx-auto">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-brand-500/20 flex items-center justify-center text-brand-400">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400">Atención</p>
+                            <p class="text-sm font-bold">Rápida y Puntual</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-brand-500/20 flex items-center justify-center text-brand-400">
+                            <i class="fa-solid fa-certificate"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400">Trabajos con</p>
+                            <p class="text-sm font-bold">Garantía escrita</p>
+                        </div>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-brand-500/20 flex items-center justify-center text-brand-400">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400">Cobertura</p>
+                            <p class="text-sm font-bold">Arroyo Seco y zona</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- SECCIÓN CARRUSEL DE IMÁGENES -->
-        <section class="py-12 max-w-5xl mx-auto px-4" x-data="{ current: 0, slides: [
-                { image: 'https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=1000', title: 'Instalaciones Profesionales', desc: 'Montaje de equipos con materiales de primera calidad.' }, 
-                { image: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=1000', title: 'Mantenimiento Preventivo', desc: 'Alargá la vida útil de tu aire acondicionado.' }, 
-                { image: 'https://images.unsplash.com/photo-1581094288338-2314dddb7ece?q=80&w=1000', title: 'Reparaciones Rápidas', desc: 'Soluciones en el día con garantía escrita.' }
-            ]}">
-            <div class="relative w-full h-72 sm:h-96 rounded-2xl overflow-hidden shadow-xl border border-slate-200 group">
-                <template x-for="(slide, index) in slides" :key="index">
-                    <div x-show="current === index" x-transition.opacity.duration.500ms class="absolute inset-0 w-full h-full">
-                        <img :src="slide.image" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 right-0 p-6 sm:p-10 text-white text-center sm:text-left">
-                            <h4 class="text-2xl sm:text-4xl font-bold mb-2 drop-shadow-lg" x-text="slide.title"></h4>
-                            <p class="text-sm sm:text-lg text-slate-200 drop-shadow-md max-w-2xl" x-text="slide.desc"></p>
+        <!-- SECCIÓN CARRUSEL AUTOMÁTICO (ADMINISTRABLE DESDE CPANEL) -->
+        <section id="galeria" class="py-12 sm:py-16 max-w-5xl mx-auto px-4" x-show="slides.length > 0">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-lg sm:text-2xl font-extrabold text-slate-900">Nuestros Trabajos</h3>
+                    <p class="text-xs sm:text-sm text-slate-500">Tocá una imagen para pausar y ver las reseñas de clientes</p>
+                </div>
+                <!-- Indicador de estado automático / pausado -->
+                <button @click="toggleCarouselAutoplay()" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold border transition-colors"
+                        :class="carouselPaused ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100' : 'bg-brand-50 text-brand-700 border-brand-200 hover:bg-brand-100'">
+                    <i class="fa-solid" :class="carouselPaused ? 'fa-play' : 'fa-pause'"></i>
+                    <span x-text="carouselPaused ? 'Pausado (Reanudar)' : 'Automático'"></span>
+                </button>
+            </div>
+
+            <div class="relative w-full h-72 sm:h-[420px] rounded-2xl overflow-hidden shadow-xl border border-slate-200 group bg-slate-900 select-none">
+
+                <!-- Slides -->
+                <template x-for="(slide, index) in slides" :key="slide.id || index">
+                    <div x-show="currentSlide === index"
+                         x-transition:enter="transition ease-out duration-500"
+                         x-transition:enter-start="opacity-0 scale-105"
+                         x-transition:enter-end="opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-300"
+                         x-transition:leave-start="opacity-100"
+                         x-transition:leave-end="opacity-0"
+                         @click="handleSlideClick(slide)"
+                         class="absolute inset-0 w-full h-full cursor-pointer">
+
+                        <!-- Imagen -->
+                        <img :src="slide.image" :alt="slide.title" class="w-full h-full object-cover" loading="lazy">
+
+                        <!-- Degradado para legibilidad -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/35 to-transparent"></div>
+
+                        <!-- Cuadro de texto sobre la imagen -->
+                        <div class="absolute bottom-8 left-0 right-0 p-6 sm:p-10 text-white text-center sm:text-left">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-500/90 text-[11px] font-bold uppercase tracking-wider mb-3 shadow">
+                                <i class="fa-solid fa-star text-amber-300"></i> Ver reseñas de clientes
+                            </span>
+                            <h4 class="text-xl sm:text-3xl font-extrabold mb-1.5 drop-shadow-lg" x-text="slide.title"></h4>
+                            <p class="text-xs sm:text-base text-slate-200 drop-shadow-md max-w-2xl" x-text="slide.desc"></p>
                         </div>
                     </div>
                 </template>
-                <button @click="current = current === 0 ? slides.length - 1 : current - 1" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white text-white hover:text-brand-600 w-10 h-10 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 shadow-lg"><i class="fa-solid fa-chevron-left"></i></button>
-                <button @click="current = current === slides.length - 1 ? 0 : current + 1" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white text-white hover:text-brand-600 w-10 h-10 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 shadow-lg"><i class="fa-solid fa-chevron-right"></i></button>
+
+                <!-- Botón Anterior (detiene el automático sin ir a reseñas) -->
+                <button @click.stop="prevSlide()" aria-label="Anterior"
+                        class="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 z-10 bg-black/40 hover:bg-white text-white hover:text-brand-600 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition-all shadow-lg">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <!-- Botón Siguiente (detiene el automático sin ir a reseñas) -->
+                <button @click.stop="nextSlide()" aria-label="Siguiente"
+                        class="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 z-10 bg-black/40 hover:bg-white text-white hover:text-brand-600 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition-all shadow-lg">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+
+                <!-- Indicadores (puntitos) -->
+                <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                    <template x-for="(slide, index) in slides" :key="'dot-' + (slide.id || index)">
+                        <button @click.stop="goToSlide(index)"
+                                :class="currentSlide === index ? 'bg-brand-400 w-7' : 'bg-white/60 hover:bg-white w-2'"
+                                class="h-2 rounded-full transition-all shadow-sm"
+                                :aria-label="'Ir a imagen ' + (index + 1)"></button>
+                    </template>
+                </div>
             </div>
         </section>
 
-        <!-- SECCIÓN SERVICIOS -->
-        <section id="servicios" class="py-12 px-4 max-w-7xl mx-auto">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <h3 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Soluciones integrales</h3>
+        <!-- SECCIÓN SERVICIOS (6 SERVICIOS COMPLETOS) -->
+        <section id="servicios" class="py-12 sm:py-20 px-4 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-14">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-3">Nuestros Servicios</h2>
+                <h3 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Soluciones integrales en aire acondicionado</h3>
+                <p class="text-slate-600 mt-4 text-base">Contamos con herramientas de precisión y repuestos originales para garantizar el óptimo funcionamiento de tus equipos.</p>
             </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Servicio 1 -->
-                <div class="bg-white p-6 border rounded-2xl shadow-sm text-center flex flex-col justify-between">
-                    <h4 class="font-bold mb-4 text-lg">Instalación Split</h4>
-                    <button @click="selectServiceAndBook('Instalación')" class="w-full py-3 bg-slate-100 text-sm font-bold rounded-xl hover:bg-brand-500 hover:text-white transition-colors">Reservar Turno</button>
+                <!-- 1 -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center text-xl font-bold mb-5">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Instalación Split</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6">Montaje profesional con vacío reglamentario, prueba hidráulica y materiales de primera calidad.</p>
+                    </div>
+                    <button @click="selectServiceAndBook('Instalación Split')" class="w-full py-2.5 px-4 bg-slate-100 hover:bg-brand-500 hover:text-white text-slate-700 font-semibold rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                        Reservar Turno <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
                 </div>
-                <!-- Servicio 2 -->
-                <div class="bg-white p-6 border rounded-2xl shadow-sm text-center flex flex-col justify-between">
-                    <h4 class="font-bold mb-4 text-lg">Reparación y Carga</h4>
-                    <button @click="selectServiceAndBook('Reparación')" class="w-full py-3 bg-slate-100 text-sm font-bold rounded-xl hover:bg-brand-500 hover:text-white transition-colors">Reservar Turno</button>
+
+                <!-- 2 -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center text-xl font-bold mb-5">
+                            <i class="fa-solid fa-gear"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Reparación y Carga</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6">Detección de fugas, soldaduras, reparación electrónica y recarga de refrigerantes (R410A, R32, R22).</p>
+                    </div>
+                    <button @click="selectServiceAndBook('Reparación y Carga')" class="w-full py-2.5 px-4 bg-slate-100 hover:bg-brand-500 hover:text-white text-slate-700 font-semibold rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                        Reservar Turno <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
                 </div>
-                <!-- Servicio 3 -->
-                <div class="bg-white p-6 border rounded-2xl shadow-sm text-center flex flex-col justify-between">
-                    <h4 class="font-bold mb-4 text-lg">Mantenimiento</h4>
-                    <button @click="selectServiceAndBook('Mantenimiento')" class="w-full py-3 bg-slate-100 text-sm font-bold rounded-xl hover:bg-brand-500 hover:text-white transition-colors">Reservar Turno</button>
+
+                <!-- 3 -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center text-xl font-bold mb-5">
+                            <i class="fa-solid fa-broom"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Mantenimiento Preventivo</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6">Limpieza profunda de filtros, serpentinas y turbina con productos bactericidas para mayor rendimiento.</p>
+                    </div>
+                    <button @click="selectServiceAndBook('Mantenimiento Preventivo')" class="w-full py-2.5 px-4 bg-slate-100 hover:bg-brand-500 hover:text-white text-slate-700 font-semibold rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                        Reservar Turno <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
                 </div>
-                <!-- Servicio 4 -->
-                <div class="bg-white p-6 border rounded-2xl shadow-sm text-center flex flex-col justify-between">
-                    <h4 class="font-bold mb-4 text-lg">Desinstalación</h4>
-                    <button @click="selectServiceAndBook('Desinstalación')" class="w-full py-3 bg-slate-100 text-sm font-bold rounded-xl hover:bg-brand-500 hover:text-white transition-colors">Reservar Turno</button>
+
+                <!-- 4 -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center text-xl font-bold mb-5">
+                            <i class="fa-solid fa-box-archive"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Desinstalación</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6">Recuperación segura de refrigerante, desmontaje cuidadoso de unidades interior y exterior.</p>
+                    </div>
+                    <button @click="selectServiceAndBook('Desinstalación')" class="w-full py-2.5 px-4 bg-slate-100 hover:bg-brand-500 hover:text-white text-slate-700 font-semibold rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                        Reservar Turno <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
                 </div>
-                <!-- Servicio 5 -->
-                <div class="bg-white p-6 border rounded-2xl shadow-sm text-center flex flex-col justify-between">
-                    <h4 class="font-bold mb-4 text-sm">Desinst. + Inst. (Mismo Dom)</h4>
-                    <button @click="selectServiceAndBook('Mudanza Equipo Mismo Domicilio')" class="w-full py-3 bg-slate-100 text-sm font-bold rounded-xl hover:bg-brand-500 hover:text-white transition-colors">Reservar Turno</button>
+
+                <!-- 5 -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center text-xl font-bold mb-5">
+                            <i class="fa-solid fa-house-chimney"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Desinstalación e instalación en el mismo domicilio</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6">Reubicación del equipo dentro del mismo hogar o local (cambio de ambiente o pared).</p>
+                    </div>
+                    <button @click="selectServiceAndBook('Desinstalación e instalación en el mismo domicilio')" class="w-full py-2.5 px-4 bg-slate-100 hover:bg-brand-500 hover:text-white text-slate-700 font-semibold rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                        Reservar Turno <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
                 </div>
-                <!-- Servicio 6 -->
-                <div class="bg-white p-6 border rounded-2xl shadow-sm text-center flex flex-col justify-between">
-                    <h4 class="font-bold mb-4 text-sm">Desinst. + Inst. (Otro Dom)</h4>
-                    <button @click="selectServiceAndBook('Mudanza Equipo Otro Domicilio')" class="w-full py-3 bg-slate-100 text-sm font-bold rounded-xl hover:bg-brand-500 hover:text-white transition-colors">Reservar Turno</button>
+
+                <!-- 6 -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center text-xl font-bold mb-5">
+                            <i class="fa-solid fa-truck-moving"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Desinstalación e instalación en otro domicilio</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6">Servicio integral por mudanza: retiro del domicilio actual e instalación completa en el nuevo destino.</p>
+                    </div>
+                    <button @click="selectServiceAndBook('Desinstalación e instalación en otro domicilio')" class="w-full py-2.5 px-4 bg-slate-100 hover:bg-brand-500 hover:text-white text-slate-700 font-semibold rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                        Reservar Turno <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
                 </div>
             </div>
         </section>
 
-        <!-- SECCIÓN RESEÑAS -->
-        <section class="py-16 bg-slate-100 px-4 border-t border-slate-200">
+        <!-- SECCIÓN RESEÑAS (DESTINO AL HACER CLIC EN EL CARRUSEL) -->
+        <section id="resenas" class="py-16 bg-slate-100 px-4 border-t border-slate-200 scroll-mt-20">
             <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Formulario de Reseñas -->
                 <div class="md:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                     <h4 class="font-bold text-lg mb-2 text-slate-800">Dejanos tu opinión</h4>
-                    <p class="text-xs text-slate-500 mb-5">Tu experiencia nos ayuda a mejorar.</p>
+                    <p class="text-xs text-slate-500 mb-5">Contanos brevemente tu experiencia (máximo 100 caracteres).</p>
                     <form @submit.prevent="submitReview()">
                         <input type="text" x-model="reviewForm.name" required placeholder="Tu Nombre o Apellido" class="w-full mb-3 px-4 py-3 border border-slate-200 rounded-xl text-sm outline-none focus:border-brand-500">
                         <div class="relative">
                             <textarea x-model="reviewForm.text" required maxlength="100" rows="3" placeholder="Excelente trabajo, muy puntual..." class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm outline-none focus:border-brand-500 resize-none"></textarea>
                             <span class="absolute bottom-3 right-3 text-[10px] font-bold text-slate-400" x-text="reviewForm.text.length + '/100'"></span>
                         </div>
-                        <button type="submit" class="w-full mt-3 py-3 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-sm transition-colors flex justify-center">
+                        <button type="submit" :disabled="isSubmittingReview" class="w-full mt-3 py-3 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-sm transition-colors flex justify-center items-center gap-2">
                             <span x-show="!isSubmittingReview">Publicar Reseña</span>
-                            <span x-show="isSubmittingReview"><i class="fa-solid fa-spinner fa-spin"></i></span>
+                            <span x-show="isSubmittingReview"><i class="fa-solid fa-spinner fa-spin"></i> Publicando...</span>
                         </button>
                     </form>
                 </div>
-                
+
                 <!-- Lista de Reseñas -->
                 <div class="md:col-span-2">
                     <h4 class="font-bold text-lg mb-5 text-slate-800">Lo que dicen nuestros clientes</h4>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <template x-for="(rev, index) in reviews" :key="index">
                             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 relative overflow-hidden">
-                                <i class="fa-solid fa-quote-right absolute -top-2 -right-2 text-slate-50 text-5xl"></i>
+                                <i class="fa-solid fa-quote-right absolute -top-2 -right-2 text-slate-100 text-5xl"></i>
                                 <div class="flex items-center gap-1 text-amber-400 text-[10px] mb-2 relative z-10">
                                     <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                                 </div>
@@ -146,142 +330,343 @@
                                 <p class="text-xs font-bold text-slate-800 relative z-10">— <span x-text="rev.name"></span></p>
                             </div>
                         </template>
-                        <div x-show="reviews.length === 0" class="col-span-2 text-sm text-slate-500 bg-white p-4 rounded-xl border border-slate-200 text-center">Aún no hay reseñas. ¡Sé el primero en opinar!</div>
+                        <div x-show="reviews.length === 0" class="col-span-2 text-sm text-slate-500 bg-white p-6 rounded-xl border border-slate-200 text-center">
+                            Aún no hay reseñas. ¡Sé el primero en opinar!
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- FOOTER Y CONTADOR DE VISITAS -->
-    <footer class="bg-white border-t py-8 px-4 text-slate-500 pb-24">
+    <!-- FOOTER DINÁMICO CON PADDING EXTRA PARA QUE NO LO TAPE WHATSAPP -->
+    <footer class="bg-white border-t border-slate-200 pt-8 pb-24 px-4 text-slate-500 text-sm">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="text-center sm:text-left flex flex-col items-center sm:items-start">
-                <p x-text="config.footerCopyright" class="font-bold text-xs"></p>
+                <p x-text="config.footerCopyright" class="font-bold text-slate-800 text-xs"></p>
                 <p x-text="config.footerText" class="text-xs mt-1"></p>
-                <div class="mt-3 flex items-center gap-2 px-3 py-1 bg-brand-50 border border-brand-100 rounded-full text-brand-600">
+                <!-- Contador de visitas -->
+                <div class="mt-3 flex items-center gap-2 px-3 py-1 bg-brand-50 border border-brand-100 rounded-full text-brand-600" title="Total de visitas a la página">
                     <i class="fa-regular fa-eye text-xs"></i>
                     <span class="text-[10px] font-bold tracking-wider">VISITAS: <span x-text="config.visitas"></span></span>
                 </div>
             </div>
-            <button @click="openAdminLogin()" class="p-2 text-slate-400 hover:text-brand-600 bg-slate-100 rounded-lg transition-colors"><i class="fa-solid fa-gear text-xl"></i></button>
+
+            <!-- Ruedita de Configuración para el cPanel Admin -->
+            <button @click="openAdminLogin()" class="flex items-center gap-2 px-3 py-2 text-slate-400 hover:text-brand-600 bg-slate-100 hover:bg-slate-200/70 rounded-xl transition-colors" title="Acceso Panel Admin">
+                <i class="fa-solid fa-gear text-lg"></i>
+                <span class="text-xs font-semibold">Admin</span>
+            </button>
         </div>
     </footer>
 
-    <!-- BOTÓN WHATSAPP FLOTANTE ACTUALIZADO AL TELÉFONO REAL -->
-    <a href="https://wa.me/5493402575870" target="_blank" class="fixed bottom-6 right-6 z-30 w-14 h-14 bg-emerald-500 text-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 text-2xl transition-transform"><i class="fa-brands fa-whatsapp"></i></a>
+    <!-- BOTÓN FLOTANTE WHATSAPP (3402575870) -->
+    <a href="https://wa.me/5493402575870?text=Hola,%20necesito%20información%20sobre%20sus%20servicios%20de%20refrigeración." target="_blank" class="fixed bottom-6 right-6 z-30 w-14 h-14 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-all text-2xl" aria-label="WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
 
-    <!-- MODAL DE RESERVA COMPLETO -->
-    <div x-show="bookingModalOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur overflow-y-auto">
-        <div @click.away="bookingModalOpen = false" class="bg-white rounded-3xl max-w-lg w-full p-6 relative my-8">
-            <button @click="bookingModalOpen = false" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 w-8 h-8 rounded-full bg-slate-100"><i class="fa-solid fa-xmark"></i></button>
-            <h3 class="text-2xl font-bold mb-4 text-slate-900">Reservar Servicio</h3>
-            
-            <form @submit.prevent="submitBooking()" class="space-y-3">
-                <input type="text" x-model="form.name" required placeholder="Nombre Completo" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:border-brand-500 outline-none">
-                <input type="tel" x-model="form.phone" required placeholder="Ej. 3402 575870" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:border-brand-500 outline-none">
-                
-                <select x-model="form.service" required class="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white focus:border-brand-500 outline-none">
-                    <option value="">Seleccionar Servicio...</option>
-                    <option value="Instalación">Instalación Split</option>
-                    <option value="Reparación">Reparación / Carga de Gas</option>
-                    <option value="Mantenimiento">Mantenimiento Preventivo</option>
-                    <option value="Desinstalación">Desinstalación</option>
-                    <option value="Mudanza Equipo Mismo Domicilio">Desinst. + Inst. (Mismo domicilio)</option>
-                    <option value="Mudanza Equipo Otro Domicilio">Desinst. + Inst. (Otro domicilio)</option>
-                </select>
+    <!-- MODAL DE RESERVA -->
+    <div x-show="bookingModalOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
+        <div @click.away="bookingModalOpen = false" class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 relative my-8">
+            <button @click="bookingModalOpen = false" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
 
-                <select x-model="form.refrigerant" class="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white focus:border-brand-500 outline-none">
-                    <option value="No sé">Tipo de Gas: No sé / No aplica</option>
-                    <option value="R410A">R410A</option>
-                    <option value="R32">R32</option>
-                    <option value="R22">R22</option>
-                </select>
+            <div class="mb-6">
+                <span class="text-xs font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-3 py-1 rounded-full">Turno Online</span>
+                <h3 class="text-2xl font-extrabold text-slate-900 mt-2">Reservar Servicio</h3>
+                <p class="text-slate-600 text-sm mt-1">Completá tus datos y la ubicación para agendar la visita.</p>
+            </div>
 
-                <div class="flex gap-2">
-                    <input type="date" x-model="form.date" required class="w-1/2 px-4 py-3 border border-slate-200 rounded-xl focus:border-brand-500 outline-none">
-                    <select x-model="form.timeSlot" required class="w-1/2 px-4 py-3 border border-slate-200 rounded-xl bg-white focus:border-brand-500 outline-none">
-                        <option value="">Horario...</option>
-                        <option value="Mañana">Mañana</option>
-                        <option value="Tarde">Tarde</option>
+            <form @submit.prevent="submitBooking()" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Nombre y Apellido *</label>
+                    <input type="text" x-model="form.name" required placeholder="Ej. Juan Pérez" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 outline-none text-sm">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Teléfono / WhatsApp *</label>
+                        <input type="tel" x-model="form.phone" required placeholder="Ej. 3402 575870" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Servicio Requerido *</label>
+                        <select x-model="form.service" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 outline-none text-sm bg-white">
+                            <option value="">Seleccionar...</option>
+                            <option value="Instalación Split">Instalación Split</option>
+                            <option value="Reparación y Carga">Reparación y Carga</option>
+                            <option value="Mantenimiento Preventivo">Mantenimiento Preventivo</option>
+                            <option value="Desinstalación">Desinstalación</option>
+                            <option value="Desinstalación e instalación en el mismo domicilio">Desinst. e inst. mismo domicilio</option>
+                            <option value="Desinstalación e instalación en otro domicilio">Desinst. e inst. otro domicilio</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Tipo de Refrigerante</label>
+                    <select x-model="form.refrigerant" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 outline-none text-sm bg-white">
+                        <option value="No sé / No especificado">No sé / No especificado</option>
+                        <option value="R410A">R410A</option>
+                        <option value="R32">R32</option>
+                        <option value="R22">R22</option>
+                        <option value="Otro">Otro</option>
                     </select>
                 </div>
-                
-                <input type="text" x-model="form.address" required placeholder="Dirección Exacta" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:border-brand-500 outline-none">
-                <textarea x-model="form.notes" rows="2" placeholder="Notas/Problema del equipo" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:border-brand-500 outline-none"></textarea>
-                
-                <button type="submit" class="w-full py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl flex items-center justify-center gap-2 mt-2 transition-colors">
-                    <span x-show="!isSubmitting"><i class="fa-brands fa-whatsapp text-xl"></i> Confirmar y Enviar</span>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Fecha Preferida *</label>
+                        <input type="date" x-model="form.date" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Franja Horaria *</label>
+                        <select x-model="form.timeSlot" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 outline-none text-sm bg-white">
+                            <option value="">Seleccionar horario...</option>
+                            <option value="Mañana (08:00 a 12:00 hs)">Mañana (08:00 a 12:00 hs)</option>
+                            <option value="Tarde (14:00 a 18:00 hs)">Tarde (14:00 a 18:00 hs)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Ubicación / Dirección Exacta *</label>
+                    <input type="text" x-model="form.address" required placeholder="Calle, Número, Localidad" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 outline-none text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Observaciones / Problema del equipo</label>
+                    <textarea x-model="form.notes" rows="2" placeholder="Ej. El equipo no enfría bien, hace ruido..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 outline-none text-sm"></textarea>
+                </div>
+
+                <button type="submit" :disabled="isSubmitting" class="w-full py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl shadow-lg shadow-brand-500/30 transition-all flex items-center justify-center gap-2 text-base mt-2">
+                    <span x-show="!isSubmitting"><i class="fa-brands fa-whatsapp text-xl"></i> Confirmar y Enviar por WhatsApp</span>
                     <span x-show="isSubmitting"><i class="fa-solid fa-spinner fa-spin"></i> Procesando...</span>
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- ADMIN LOGIN (SIN CONTRASEÑA VISIBLE) -->
-    <div x-show="adminLoginModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center">
-            <h3 class="font-bold mb-4 text-slate-900">Ingreso cPanel Admin</h3>
-            <input type="password" x-model="adminPasswordInput" placeholder="Contraseña" class="w-full p-3 border rounded-xl mb-4 text-center outline-none focus:border-brand-500">
-            <button @click="verifyAdminPassword()" class="w-full p-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-colors">Entrar</button>
-            <button @click="adminLoginModal = false" class="w-full p-3 mt-2 text-sm text-slate-500 hover:text-slate-800">Cancelar</button>
+    <!-- MODAL LOGIN ADMIN (SIN CONTRASEÑA VISIBLE) -->
+    <div x-show="adminLoginModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+        <div @click.away="adminLoginModal = false" class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 sm:p-8 relative">
+            <button @click="adminLoginModal = false" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-slate-900 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow">
+                    <i class="fa-solid fa-lock text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">cPanel Admin</h3>
+                <p class="text-xs text-slate-500 mt-1">Ingresá la contraseña de administrador</p>
+            </div>
+            <form @submit.prevent="verifyAdminPassword()" class="space-y-4">
+                <input type="password" x-model="adminPasswordInput" required placeholder="Contraseña" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 outline-none text-sm text-center tracking-widest font-mono">
+                <button type="submit" class="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-sm transition-all">
+                    Acceder al Panel
+                </button>
+                <p x-show="loginError" class="text-xs text-red-500 text-center font-medium">Contraseña incorrecta</p>
+            </form>
         </div>
     </div>
 
-    <!-- PANEL ADMIN COMPLETO -->
+    <!-- PANEL ADMIN COMPLETO (TURNOS + CARRUSEL + TEXTOS WEB) -->
     <div x-show="adminPanelOpen" x-cloak class="fixed inset-0 z-50 bg-slate-900 flex flex-col">
-        <header class="bg-slate-800 p-4 flex justify-between items-center text-white border-b border-slate-700">
-            <div class="flex items-center gap-4">
-                <h3 class="font-bold hidden sm:block">cPanel Admin</h3>
-                <div class="flex bg-slate-900 rounded-lg p-1">
-                    <button @click="adminTab = 'turnos'" :class="adminTab === 'turnos' ? 'bg-brand-500 text-white' : 'text-slate-400 hover:text-white'" class="px-4 py-1.5 rounded text-sm font-semibold transition-colors">Turnos</button>
-                    <button @click="adminTab = 'config'" :class="adminTab === 'config' ? 'bg-brand-500 text-white' : 'text-slate-400 hover:text-white'" class="px-4 py-1.5 rounded text-sm font-semibold transition-colors">Textos Web</button>
+        <!-- Header cPanel -->
+        <header class="bg-slate-800 p-4 flex flex-wrap justify-between items-center gap-3 text-white border-b border-slate-700">
+            <div class="flex items-center gap-3 flex-wrap">
+                <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 bg-brand-500 rounded-xl flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <h3 class="font-bold hidden sm:block">cPanel Admin</h3>
+                </div>
+                <!-- Pestañas -->
+                <div class="flex bg-slate-900 rounded-xl p-1 gap-1">
+                    <button @click="adminTab = 'turnos'" :class="adminTab === 'turnos' ? 'bg-brand-500 text-white' : 'text-slate-400 hover:text-white'" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors">
+                        <i class="fa-solid fa-calendar-days mr-1"></i> Turnos
+                    </button>
+                    <button @click="adminTab = 'carrusel'" :class="adminTab === 'carrusel' ? 'bg-brand-500 text-white' : 'text-slate-400 hover:text-white'" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors">
+                        <i class="fa-solid fa-images mr-1"></i> Carrusel
+                    </button>
+                    <button @click="adminTab = 'config'" :class="adminTab === 'config' ? 'bg-brand-500 text-white' : 'text-slate-400 hover:text-white'" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors">
+                        <i class="fa-solid fa-pen-to-square mr-1"></i> Textos
+                    </button>
                 </div>
             </div>
+
             <div class="flex gap-2">
-                <button @click="fetchAdminData()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors"><i class="fa-solid fa-rotate-right"></i></button>
-                <button @click="adminPanelOpen = false" class="px-4 py-2 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg text-sm transition-colors"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
+                <button @click="fetchAdminData()" class="px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs sm:text-sm transition-colors" title="Recargar datos">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </button>
+                <button @click="adminPanelOpen = false" class="px-3 py-2 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg text-xs sm:text-sm font-semibold transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-right-from-bracket"></i> Salir
+                </button>
             </div>
         </header>
 
-        <div class="p-6 overflow-auto text-white flex-grow max-w-7xl mx-auto w-full">
-            <div x-show="loadingAdmin" class="text-center py-12"><i class="fa-solid fa-spinner fa-spin text-4xl text-brand-500"></i><p class="mt-4 text-slate-400">Sincronizando con Google Sheets...</p></div>
-            
-            <!-- PESTAÑA: TURNOS -->
+        <!-- Contenido del cPanel -->
+        <div class="p-4 sm:p-6 overflow-y-auto text-white flex-grow max-w-7xl mx-auto w-full">
+            <div x-show="loadingAdmin" class="text-center py-16">
+                <i class="fa-solid fa-spinner fa-spin text-4xl text-brand-400"></i>
+                <p class="mt-4 text-slate-400 text-sm">Sincronizando datos...</p>
+            </div>
+
+            <!-- PESTAÑA 1: TURNOS -->
             <div x-show="adminTab === 'turnos' && !loadingAdmin">
+                <!-- Contadores rápidos -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4">
+                        <p class="text-xs text-slate-400 font-semibold uppercase">Total Turnos</p>
+                        <p class="text-2xl font-extrabold mt-1 text-brand-400" x-text="appointments.length">0</p>
+                    </div>
+                    <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4">
+                        <p class="text-xs text-slate-400 font-semibold uppercase">Pendientes</p>
+                        <p class="text-2xl font-extrabold mt-1 text-amber-400" x-text="appointments.filter(a => a.status === 'Pendiente').length">0</p>
+                    </div>
+                    <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4">
+                        <p class="text-xs text-slate-400 font-semibold uppercase">Visitas Totales</p>
+                        <p class="text-2xl font-extrabold mt-1 text-emerald-400" x-text="config.visitas">0</p>
+                    </div>
+                </div>
+
                 <div class="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden shadow-xl overflow-x-auto">
-                    <table class="w-full text-left text-sm">
+                    <table class="w-full text-left text-sm whitespace-nowrap">
                         <thead class="bg-slate-900/60 text-slate-400 uppercase text-xs">
-                            <tr><th class="p-4">Cliente</th><th class="p-4">Servicio / Gas</th><th class="p-4">Fecha</th><th class="p-4">Ubicación</th><th class="p-4">Estado</th><th class="p-4 text-center">Borrar</th></tr>
+                            <tr>
+                                <th class="p-4">Cliente</th>
+                                <th class="p-4">Servicio / Gas</th>
+                                <th class="p-4">Fecha</th>
+                                <th class="p-4">Ubicación</th>
+                                <th class="p-4">Estado</th>
+                                <th class="p-4 text-center">Borrar</th>
+                            </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-700">
                             <template x-for="app in appointments" :key="app.rowIndex">
                                 <tr class="hover:bg-slate-700/40 transition-colors">
-                                    <td class="p-4"><strong x-text="app.name"></strong><br><span class="text-xs text-slate-400" x-text="app.phone"></span></td>
-                                    <td class="p-4"><span class="text-brand-400 font-semibold" x-text="app.service"></span><br><span class="text-xs text-slate-400">Gas: <span x-text="app.refrigerant"></span></span></td>
-                                    <td class="p-4"><span x-text="app.date"></span><br><span class="text-xs text-slate-400" x-text="app.timeSlot"></span></td>
-                                    <td class="p-4 text-xs max-w-[200px] truncate" :title="app.address + ' - ' + app.notes" x-text="app.address"></td>
                                     <td class="p-4">
-                                        <select x-model="app.status" @change="updateStatus(app)" class="bg-slate-900 border border-slate-700 rounded p-1.5 text-xs font-semibold" :class="app.status === 'Pendiente' ? 'text-amber-400' : (app.status === 'Confirmado' ? 'text-blue-400' : 'text-emerald-400')">
+                                        <strong x-text="app.name"></strong><br>
+                                        <span class="text-xs text-slate-400" x-text="app.phone"></span>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="text-brand-400 font-semibold whitespace-normal block max-w-[200px]" x-text="app.service"></span>
+                                        <span class="text-xs text-slate-400">Gas: <span x-text="app.refrigerant"></span></span>
+                                    </td>
+                                    <td class="p-4">
+                                        <span x-text="app.date"></span><br>
+                                        <span class="text-xs text-slate-400" x-text="app.timeSlot"></span>
+                                    </td>
+                                    <td class="p-4 text-xs whitespace-normal max-w-[220px]">
+                                        <div x-text="app.address"></div>
+                                        <div class="text-[11px] text-slate-400 italic mt-0.5" x-text="app.notes"></div>
+                                    </td>
+                                    <td class="p-4">
+                                        <select x-model="app.status" @change="updateStatus(app)" class="bg-slate-900 border border-slate-700 rounded p-1.5 text-xs font-semibold outline-none" :class="app.status === 'Pendiente' ? 'text-amber-400' : (app.status === 'Confirmado' ? 'text-blue-400' : 'text-emerald-400')">
                                             <option value="Pendiente">Pendiente</option>
                                             <option value="Confirmado">Confirmado</option>
                                             <option value="Completado">Completado</option>
                                         </select>
                                     </td>
                                     <td class="p-4 text-center">
-                                        <button @click="deleteAppointment(app)" class="bg-red-500/10 text-red-400 hover:bg-red-500/30 p-2 rounded-lg transition-colors"><i class="fa-solid fa-trash"></i></button>
+                                        <button @click="askConfirm('¿Eliminar este turno definitivamente?', () => deleteAppointment(app))" class="bg-red-500/10 text-red-400 hover:bg-red-500/30 p-2 rounded-lg transition-colors">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             </template>
                             <template x-if="appointments.length === 0">
-                                <tr><td colspan="6" class="p-8 text-center text-slate-400">No hay turnos registrados en Google Sheets.</td></tr>
+                                <tr><td colspan="6" class="p-8 text-center text-slate-400">No hay turnos registrados todavía.</td></tr>
                             </template>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- PESTAÑA: CONFIGURACIÓN -->
+            <!-- PESTAÑA 2: ADMINISTRAR CARRUSEL (SUBIR FOTO / URL + DESCRIPCIÓN) -->
+            <div x-show="adminTab === 'carrusel' && !loadingAdmin" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Formulario para agregar imagen -->
+                <div class="lg:col-span-5 bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl h-fit">
+                    <h4 class="text-lg font-bold text-brand-400 mb-1">Agregar Foto al Carrusel</h4>
+                    <p class="text-xs text-slate-400 mb-5">Subí una foto desde tu celular/PC o pegá una URL de imagen. Al tocarla en la web, llevará al cliente directo a las reseñas.</p>
+
+                    <form @submit.prevent="addCarouselSlide()" class="space-y-4">
+                        <!-- Selector de archivo desde dispositivo -->
+                        <div>
+                            <label class="block text-xs font-semibold mb-1.5 text-slate-300">Opción A: Subir foto desde tu dispositivo</label>
+                            <label class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-slate-600 hover:border-brand-400 rounded-xl cursor-pointer bg-slate-900/50 transition-colors p-3 text-center">
+                                <template x-if="!slideForm.preview">
+                                    <div>
+                                        <i class="fa-solid fa-cloud-arrow-up text-2xl text-brand-400 mb-1"></i>
+                                        <p class="text-xs text-slate-300 font-medium">Tocá para elegir una foto</p>
+                                        <p class="text-[10px] text-slate-500">Se comprime automáticamente para cargar rápido</p>
+                                    </div>
+                                </template>
+                                <template x-if="slideForm.preview">
+                                    <div class="flex items-center gap-3 w-full">
+                                        <img :src="slideForm.preview" class="w-16 h-16 object-cover rounded-lg border border-slate-600">
+                                        <div class="text-left flex-grow overflow-hidden">
+                                            <p class="text-xs text-emerald-400 font-bold truncate"><i class="fa-solid fa-check mr-1"></i>Foto lista para subir</p>
+                                            <p class="text-[10px] text-slate-400">Tocá de nuevo para cambiarla</p>
+                                        </div>
+                                    </div>
+                                </template>
+                                <input type="file" accept="image/*" @change="handleSlideFile($event)" class="hidden">
+                            </label>
+                        </div>
+
+                        <!-- O pegar URL directa -->
+                        <div>
+                            <label class="block text-xs font-semibold mb-1 text-slate-300">Opción B: O pegar URL de la imagen</label>
+                            <input type="url" x-model="slideForm.imageUrl" @input="if(slideForm.imageUrl) { slideForm.imageBase64 = ''; slideForm.preview = slideForm.imageUrl; }" placeholder="https://ejemplo.com/mi-foto.jpg" class="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:border-brand-500 outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold mb-1 text-slate-300">Título de la foto *</label>
+                            <input type="text" x-model="slideForm.title" required placeholder="Ej. Instalación Split 3000 Frigorías" class="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:border-brand-500 outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold mb-1 text-slate-300">Descripción corta *</label>
+                            <textarea x-model="slideForm.desc" required rows="2" placeholder="Ej. Trabajo realizado en Arroyo Seco con vacío reglamentario." class="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:border-brand-500 outline-none resize-none"></textarea>
+                        </div>
+
+                        <button type="submit" :disabled="isSavingSlide" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors">
+                            <span x-show="!isSavingSlide"><i class="fa-solid fa-plus"></i> Agregar al Carrusel</span>
+                            <span x-show="isSavingSlide"><i class="fa-solid fa-spinner fa-spin"></i> Subiendo imagen...</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Lista de fotos actuales del carrusel -->
+                <div class="lg:col-span-7 bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-lg font-bold text-white">Fotos activas en el Carrusel (<span x-text="slides.length"></span>)</h4>
+                    </div>
+
+                    <div class="space-y-3">
+                        <template x-for="(slide, index) in slides" :key="slide.id || index">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-slate-900/70 border border-slate-700 rounded-xl p-3">
+                                <img :src="slide.image" :alt="slide.title" class="w-full sm:w-28 h-32 sm:h-20 object-cover rounded-lg border border-slate-700 flex-shrink-0">
+                                <div class="flex-grow min-w-0">
+                                    <h5 class="font-bold text-sm text-white truncate" x-text="slide.title"></h5>
+                                    <p class="text-xs text-slate-400 line-clamp-2 mt-0.5" x-text="slide.desc"></p>
+                                    <p class="text-[10px] text-brand-400 mt-1"><i class="fa-solid fa-link mr-1"></i>Destino: Sección Reseñas (#resenas)</p>
+                                </div>
+                                <button @click="askConfirm('¿Quitar esta foto del carrusel?', () => deleteCarouselSlide(slide, index))"
+                                        class="self-end sm:self-center px-3 py-2 bg-red-500/15 hover:bg-red-500/30 text-red-400 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 flex-shrink-0">
+                                    <i class="fa-solid fa-trash"></i> Quitar
+                                </button>
+                            </div>
+                        </template>
+                        <div x-show="slides.length === 0" class="text-center py-10 text-slate-400 text-sm">
+                            No hay imágenes en el carrusel. Agregá la primera desde el formulario.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PESTAÑA 3: CONFIGURACIÓN DE TEXTOS -->
             <div x-show="adminTab === 'config' && !loadingAdmin" class="max-w-2xl mx-auto">
                 <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl">
                     <h4 class="text-lg font-bold mb-1 text-brand-400">Editar Textos de la Página</h4>
@@ -291,22 +676,34 @@
                         <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
                             <h5 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Zona Superior (Cabecera)</h5>
                             <div class="space-y-3">
-                                <div><label class="block text-xs font-semibold mb-1 text-slate-300">Título Principal</label><input type="text" x-model="config.headerTitle" class="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:border-brand-500 outline-none"></div>
-                                <div><label class="block text-xs font-semibold mb-1 text-slate-300">Subtítulo (Color Azul)</label><input type="text" x-model="config.headerSubtitle" class="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:border-brand-500 outline-none"></div>
+                                <div>
+                                    <label class="block text-xs font-semibold mb-1 text-slate-300">Título Principal</label>
+                                    <input type="text" x-model="config.headerTitle" class="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:border-brand-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold mb-1 text-slate-300">Subtítulo (Color Azul)</label>
+                                    <input type="text" x-model="config.headerSubtitle" class="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:border-brand-500 outline-none">
+                                </div>
                             </div>
                         </div>
 
                         <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
                             <h5 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Zona Inferior (Pie de página)</h5>
                             <div class="space-y-3">
-                                <div><label class="block text-xs font-semibold mb-1 text-slate-300">Derechos y Año</label><input type="text" x-model="config.footerCopyright" class="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:border-brand-500 outline-none"></div>
-                                <div><label class="block text-xs font-semibold mb-1 text-slate-300">Descripción Corta</label><input type="text" x-model="config.footerText" class="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:border-brand-500 outline-none"></div>
+                                <div>
+                                    <label class="block text-xs font-semibold mb-1 text-slate-300">Derechos y Año</label>
+                                    <input type="text" x-model="config.footerCopyright" class="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:border-brand-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold mb-1 text-slate-300">Descripción Corta</label>
+                                    <input type="text" x-model="config.footerText" class="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:border-brand-500 outline-none">
+                                </div>
                             </div>
                         </div>
 
-                        <button type="submit" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors mt-2">
+                        <button type="submit" :disabled="isSavingConfig" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors mt-2">
                             <span x-show="!isSavingConfig"><i class="fa-solid fa-floppy-disk"></i> Guardar y Aplicar Cambios</span>
-                            <span x-show="isSavingConfig"><i class="fa-solid fa-spinner fa-spin"></i> Guardando en Sheets...</span>
+                            <span x-show="isSavingConfig"><i class="fa-solid fa-spinner fa-spin"></i> Guardando...</span>
                         </button>
                     </form>
                 </div>
@@ -314,117 +711,456 @@
         </div>
     </div>
 
-    <!-- LOGICA SCRIPT COMPLETA -->
+    <!-- MODAL DE CONFIRMACIÓN PERSONALIZADO -->
+    <div x-show="confirmModal.open" x-cloak class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm">
+        <div @click.away="confirmModal.open = false" class="bg-slate-800 rounded-2xl shadow-2xl max-w-sm w-full p-6 border border-slate-700">
+            <h3 class="text-lg font-bold text-white mb-2">Confirmar acción</h3>
+            <p class="text-sm text-slate-300 mb-6" x-text="confirmModal.message"></p>
+            <div class="flex justify-end gap-3">
+                <button @click="confirmModal.open = false" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm font-medium transition-colors">Cancelar</button>
+                <button @click="runConfirmAction()" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-medium transition-colors">Sí, confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LÓGICA COMPLETA ALPINE.JS -->
     <script>
-        // ========================================================
-        // PEGAR LA *NUEVA* URL DE GOOGLE APPS SCRIPT AQUÍ
-        // ========================================================
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyGh4Ojk1kuAbqlSS9H5XZRD6Z5xTU6pvEfhgFzHfs_c6e6uOe0lNzDDVuu9YHL9Udo/exec'; 
+        // =========================================================================
+        // PEGAR AQUÍ LA NUEVA URL DE TU GOOGLE APPS SCRIPT (DE apps_script_guia.md)
+        // =========================================================================
+        const GOOGLE_SCRIPT_URL = 'URL_DE_TU_NUEVO_SCRIPT_AQUI';
+        const WHATSAPP_NUMBER = '5493402575870';
+
+        const DEFAULT_SLIDES = [
+            {
+                id: 'default-1',
+                image: 'https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=1000',
+                title: 'Instalaciones Profesionales',
+                desc: 'Montaje de equipos split con vacío reglamentario y materiales de primera calidad.'
+            },
+            {
+                id: 'default-2',
+                image: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=1000',
+                title: 'Mantenimiento Preventivo',
+                desc: 'Limpieza profunda para alargar la vida útil de tu aire y mejorar su rendimiento.'
+            },
+            {
+                id: 'default-3',
+                image: 'https://images.unsplash.com/photo-1581094288338-2314dddb7ece?q=80&w=1000',
+                title: 'Reparaciones y Carga de Gas',
+                desc: 'Atención rápida en Arroyo Seco y zona con garantía escrita.'
+            }
+        ];
 
         function app() {
             return {
-                bookingModalOpen: false, adminLoginModal: false, adminPanelOpen: false,
-                adminPasswordInput: '', isSubmitting: false, loadingAdmin: false, isSavingConfig: false,
+                bookingModalOpen: false,
+                adminLoginModal: false,
+                adminPanelOpen: false,
+                adminPasswordInput: '',
+                loginError: false,
+                isSubmitting: false,
+                loadingAdmin: false,
+                isSavingConfig: false,
+                isSubmittingReview: false,
+                isSavingSlide: false,
                 adminTab: 'turnos',
-                form: { name: '', phone: '', service: '', refrigerant: 'No sé', date: '', timeSlot: '', address: '', notes: '', status: 'Pendiente' },
+
+                // Carrusel
+                currentSlide: 0,
+                carouselPaused: false,
+                carouselTimer: null,
+                slides: [...DEFAULT_SLIDES],
+                slideForm: { title: '', desc: '', imageUrl: '', imageBase64: '', preview: '' },
+
+                // Toast y Confirmación custom
+                toast: { show: false, message: '', type: 'success' },
+                confirmModal: { open: false, message: '', action: null },
+
+                // Formularios y Datos
+                form: { name: '', phone: '', service: '', refrigerant: 'No sé / No especificado', date: '', timeSlot: '', address: '', notes: '', status: 'Pendiente' },
                 appointments: [],
                 reviews: [],
                 reviewForm: { name: '', text: '' },
-                isSubmittingReview: false,
-                config: { 
-                    headerTitle: 'CMS SERVICIOS GENERALES', headerSubtitle: 'REFRIGERACIÓN', 
-                    footerText: 'Especialistas en climatización y confort.', footerCopyright: '© 2026 Todos los derechos reservados.', visitas: 0 
+                config: {
+                    headerTitle: 'CMS SERVICIOS GENERALES',
+                    headerSubtitle: 'REFRIGERACIÓN',
+                    footerText: 'Especialistas en climatización y confort.',
+                    footerCopyright: '© 2026 Todos los derechos reservados.',
+                    visitas: 0
+                },
+
+                isBackendConnected() {
+                    return GOOGLE_SCRIPT_URL && !GOOGLE_SCRIPT_URL.includes('URL_DE_TU');
+                },
+
+                showToast(message, type = 'success') {
+                    this.toast = { show: true, message, type };
+                    setTimeout(() => { this.toast.show = false; }, 3500);
+                },
+
+                askConfirm(message, actionFn) {
+                    this.confirmModal = { open: true, message, action: actionFn };
+                },
+
+                runConfirmAction() {
+                    if (typeof this.confirmModal.action === 'function') {
+                        this.confirmModal.action();
+                    }
+                    this.confirmModal.open = false;
                 },
 
                 init() {
+                    this.loadLocalFallback();
                     this.fetchPublicData();
                     this.registerVisit();
+                    this.startCarouselAutoplay();
                 },
 
+                // ---- CARRUSEL AUTOMÁTICO Y PAUSA AL CLIC ----
+                startCarouselAutoplay() {
+                    this.stopCarouselAutoplay();
+                    this.carouselPaused = false;
+                    this.carouselTimer = setInterval(() => {
+                        if (!this.carouselPaused && this.slides.length > 1) {
+                            this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+                        }
+                    }, 4000);
+                },
+
+                stopCarouselAutoplay() {
+                    if (this.carouselTimer) {
+                        clearInterval(this.carouselTimer);
+                        this.carouselTimer = null;
+                    }
+                    this.carouselPaused = true;
+                },
+
+                toggleCarouselAutoplay() {
+                    if (this.carouselPaused) {
+                        this.startCarouselAutoplay();
+                    } else {
+                        this.stopCarouselAutoplay();
+                    }
+                },
+
+                nextSlide() {
+                    this.stopCarouselAutoplay();
+                    if (this.slides.length > 0) {
+                        this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+                    }
+                },
+
+                prevSlide() {
+                    this.stopCarouselAutoplay();
+                    if (this.slides.length > 0) {
+                        this.currentSlide = this.currentSlide === 0 ? this.slides.length - 1 : this.currentSlide - 1;
+                    }
+                },
+
+                goToSlide(index) {
+                    this.stopCarouselAutoplay();
+                    this.currentSlide = index;
+                },
+
+                // Al hacer clic en cualquier imagen: se detiene el carrusel y lleva directo a #resenas
+                handleSlideClick(slide) {
+                    this.stopCarouselAutoplay();
+                    const reviewsEl = document.getElementById('resenas');
+                    if (reviewsEl) {
+                        reviewsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                },
+
+                // ---- CARGA Y COMPRESIÓN DE FOTO DESDE EL CPANEL ----
+                handleSlideFile(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            const maxW = 1200;
+                            let w = img.width;
+                            let h = img.height;
+                            if (w > maxW) {
+                                h = Math.round((h * maxW) / w);
+                                w = maxW;
+                            }
+                            canvas.width = w;
+                            canvas.height = h;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, w, h);
+                            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.78);
+                            this.slideForm.imageBase64 = compressedDataUrl;
+                            this.slideForm.preview = compressedDataUrl;
+                            this.slideForm.imageUrl = '';
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                },
+
+                async addCarouselSlide() {
+                    if (!this.slideForm.imageBase64 && !this.slideForm.imageUrl) {
+                        this.showToast('Subí una foto o pegá una URL de imagen.', 'error');
+                        return;
+                    }
+                    this.isSavingSlide = true;
+                    const newId = 'slide-' + Date.now();
+
+                    try {
+                        if (this.isBackendConnected()) {
+                            const res = await fetch(GOOGLE_SCRIPT_URL, {
+                                method: 'POST',
+                                body: JSON.stringify({
+                                    action: 'addSlide',
+                                    id: newId,
+                                    imageBase64: this.slideForm.imageBase64,
+                                    imageUrl: this.slideForm.imageUrl,
+                                    title: this.slideForm.title,
+                                    desc: this.slideForm.desc
+                                })
+                            });
+                            const data = await res.json();
+                            if (data.status === 'success') {
+                                this.slides.unshift({
+                                    id: data.id || newId,
+                                    image: data.imageUrl || this.slideForm.imageUrl || this.slideForm.preview,
+                                    title: this.slideForm.title,
+                                    desc: this.slideForm.desc
+                                });
+                                this.currentSlide = 0;
+                                this.showToast('¡Foto agregada al carrusel!');
+                            } else {
+                                throw new Error(data.message || 'Error al guardar');
+                            }
+                        } else {
+                            // Modo local (preview sin Apps Script)
+                            this.slides.unshift({
+                                id: newId,
+                                image: this.slideForm.preview || this.slideForm.imageUrl,
+                                title: this.slideForm.title,
+                                desc: this.slideForm.desc
+                            });
+                            this.currentSlide = 0;
+                            this.saveLocalFallback();
+                            this.showToast('Foto agregada (modo local).');
+                        }
+                        this.slideForm = { title: '', desc: '', imageUrl: '', imageBase64: '', preview: '' };
+                    } catch (e) {
+                        console.error(e);
+                        this.showToast('Error al subir la foto. Revisá los permisos de Apps Script.', 'error');
+                    }
+                    this.isSavingSlide = false;
+                },
+
+                async deleteCarouselSlide(slide, index) {
+                    this.slides.splice(index, 1);
+                    if (this.currentSlide >= this.slides.length) {
+                        this.currentSlide = 0;
+                    }
+                    if (this.isBackendConnected()) {
+                        try {
+                            await fetch(GOOGLE_SCRIPT_URL, {
+                                method: 'POST',
+                                body: JSON.stringify({ action: 'deleteSlide', id: slide.id })
+                            });
+                            this.showToast('Foto eliminada del carrusel.');
+                        } catch (e) {
+                            this.showToast('Error al eliminar en Google Sheets.', 'error');
+                        }
+                    } else {
+                        this.saveLocalFallback();
+                        this.showToast('Foto eliminada.');
+                    }
+                },
+
+                // ---- FALLBACK LOCAL PARA PRUEBAS ----
+                loadLocalFallback() {
+                    try {
+                        const savedSlides = localStorage.getItem('cms_slides_v1');
+                        if (savedSlides) this.slides = JSON.parse(savedSlides);
+                        const savedTurns = localStorage.getItem('cms_turnos_v1');
+                        if (savedTurns) this.appointments = JSON.parse(savedTurns);
+                        const savedReviews = localStorage.getItem('cms_reviews_v1');
+                        if (savedReviews) this.reviews = JSON.parse(savedReviews);
+                        const savedConfig = localStorage.getItem('cms_config_v1');
+                        if (savedConfig) this.config = { ...this.config, ...JSON.parse(savedConfig) };
+                    } catch (e) {}
+                },
+
+                saveLocalFallback() {
+                    try {
+                        localStorage.setItem('cms_slides_v1', JSON.stringify(this.slides));
+                        localStorage.setItem('cms_turnos_v1', JSON.stringify(this.appointments));
+                        localStorage.setItem('cms_reviews_v1', JSON.stringify(this.reviews));
+                        localStorage.setItem('cms_config_v1', JSON.stringify(this.config));
+                    } catch (e) {}
+                },
+
+                // ---- SINCRONIZACIÓN CON GOOGLE SHEETS ----
                 async fetchPublicData() {
-                    if(GOOGLE_SCRIPT_URL.includes('URL_DE_TU')) return;
+                    if (!this.isBackendConnected()) return;
                     try {
                         const res = await fetch(GOOGLE_SCRIPT_URL);
                         const data = await res.json();
                         if (data.config) this.config = data.config;
                         if (data.reviews) this.reviews = data.reviews;
-                    } catch(e) {}
+                        if (data.slides && data.slides.length > 0) {
+                            this.slides = data.slides;
+                            this.currentSlide = 0;
+                        }
+                    } catch (e) { console.error(e); }
                 },
 
                 async registerVisit() {
-                    if(GOOGLE_SCRIPT_URL.includes('URL_DE_TU')) return;
-                    if(!localStorage.getItem('cms_visited_v2')) {
-                        fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'visit' }) });
-                        localStorage.setItem('cms_visited_v2', 'true');
+                    if (!localStorage.getItem('cms_visited_v3')) {
+                        localStorage.setItem('cms_visited_v3', 'true');
+                        if (this.isBackendConnected()) {
+                            fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'visit' }) }).catch(() => {});
+                        } else {
+                            this.config.visitas = Number(this.config.visitas || 0) + 1;
+                            this.saveLocalFallback();
+                        }
                     }
                 },
 
+                // ---- RESEÑAS ----
                 async submitReview() {
-                    if(GOOGLE_SCRIPT_URL.includes('URL_DE_TU')) return;
                     this.isSubmittingReview = true;
+                    const newRev = { name: this.reviewForm.name, text: this.reviewForm.text.substring(0, 100) };
                     try {
-                        await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'addReview', ...this.reviewForm }) });
-                        this.reviews.unshift({ name: this.reviewForm.name, text: this.reviewForm.text });
+                        if (this.isBackendConnected()) {
+                            await fetch(GOOGLE_SCRIPT_URL, {
+                                method: 'POST',
+                                body: JSON.stringify({ action: 'addReview', ...newRev })
+                            });
+                        }
+                        this.reviews.unshift(newRev);
+                        this.saveLocalFallback();
                         this.reviewForm = { name: '', text: '' };
-                        alert('¡Muchas gracias por dejarnos tu opinión!');
-                    } catch(e) { alert("Hubo un error al publicar la reseña."); }
+                        this.showToast('¡Muchas gracias por dejarnos tu opinión!');
+                    } catch (e) {
+                        this.showToast('Hubo un error al publicar la reseña.', 'error');
+                    }
                     this.isSubmittingReview = false;
                 },
 
+                // ---- TURNOS ----
                 openBookingModal() { this.bookingModalOpen = true; },
-                selectServiceAndBook(serviceName) { this.form.service = serviceName; this.openBookingModal(); },
+                selectServiceAndBook(serviceName) {
+                    this.form.service = serviceName;
+                    this.openBookingModal();
+                },
 
                 async submitBooking() {
                     this.isSubmitting = true;
-                    if(GOOGLE_SCRIPT_URL !== 'URL_DE_TU_NUEVO_SCRIPT_AQUI') {
-                        fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'add', ...this.form }) }).catch(e => console.error(e));
+                    const bookingData = { ...this.form, rowIndex: Date.now() };
+
+                    if (this.isBackendConnected()) {
+                        fetch(GOOGLE_SCRIPT_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({ action: 'add', ...this.form })
+                        }).catch(e => console.error(e));
+                    } else {
+                        this.appointments.unshift(bookingData);
+                        this.saveLocalFallback();
                     }
-                    
-                    // TELÉFONO REAL DE ENVÍO DE WHATSAPP: 3402 575870
-                    const msg = `*NUEVO TURNO WEB*%0A👤 ${this.form.name}%0A📞 ${this.form.phone}%0A🛠 ${this.form.service}%0A❄️ Gas: ${this.form.refrigerant}%0A📅 ${this.form.date} (${this.form.timeSlot})%0A📍 ${this.form.address}`;
-                    window.open(`https://wa.me/5493402575870?text=${msg}`, '_blank');
-                    
-                    this.bookingModalOpen = false; this.isSubmitting = false;
-                    this.form = { name: '', phone: '', service: '', refrigerant: 'No sé', date: '', timeSlot: '', address: '', notes: '', status: 'Pendiente' };
+
+                    const msg = `*NUEVO TURNO WEB - CMS REFRIGERACIÓN*%0A%0A` +
+                                `👤 *Cliente:* ${encodeURIComponent(this.form.name)}%0A` +
+                                `📞 *Teléfono:* ${encodeURIComponent(this.form.phone)}%0A` +
+                                `🛠 *Servicio:* ${encodeURIComponent(this.form.service)}%0A` +
+                                `❄️ *Gas:* ${encodeURIComponent(this.form.refrigerant)}%0A` +
+                                `📅 *Fecha:* ${encodeURIComponent(this.form.date)} (${encodeURIComponent(this.form.timeSlot)})%0A` +
+                                `📍 *Ubicación:* ${encodeURIComponent(this.form.address)}%0A` +
+                                `📝 *Notas:* ${encodeURIComponent(this.form.notes || 'Ninguna')}`;
+
+                    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
+
+                    this.bookingModalOpen = false;
+                    this.isSubmitting = false;
+                    this.form = { name: '', phone: '', service: '', refrigerant: 'No sé / No especificado', date: '', timeSlot: '', address: '', notes: '', status: 'Pendiente' };
+                    this.showToast('¡Solicitud enviada por WhatsApp!');
                 },
 
-                openAdminLogin() { this.adminPasswordInput = ''; this.adminLoginModal = true; },
-                
+                // ---- CPANEL ADMIN ----
+                openAdminLogin() {
+                    this.adminPasswordInput = '';
+                    this.loginError = false;
+                    this.adminLoginModal = true;
+                },
+
                 verifyAdminPassword() {
                     if (this.adminPasswordInput === '1234' || this.adminPasswordInput === 'admin') {
-                        this.adminLoginModal = false; this.adminPanelOpen = true; this.fetchAdminData();
-                    } else { alert("Contraseña incorrecta"); }
+                        this.adminLoginModal = false;
+                        this.adminPanelOpen = true;
+                        this.fetchAdminData();
+                    } else {
+                        this.loginError = true;
+                    }
                 },
 
                 async fetchAdminData() {
+                    if (!this.isBackendConnected()) return;
                     this.loadingAdmin = true;
                     try {
-                        const res = await fetch(GOOGLE_SCRIPT_URL + "?admin=true");
+                        const res = await fetch(GOOGLE_SCRIPT_URL + '?admin=true');
                         const data = await res.json();
                         this.appointments = data.appointments || [];
                         if (data.config) this.config = data.config;
-                    } catch(e) { console.error(e); }
+                        if (data.slides && data.slides.length > 0) this.slides = data.slides;
+                    } catch (e) {
+                        console.error(e);
+                        this.showToast('Error al cargar datos de Google Sheets.', 'error');
+                    }
                     this.loadingAdmin = false;
                 },
 
                 async saveConfig() {
                     this.isSavingConfig = true;
                     try {
-                        await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'updateConfig', config: this.config }) });
-                        alert("¡Textos actualizados con éxito!");
-                    } catch(e) { alert("Hubo un error al guardar."); }
+                        if (this.isBackendConnected()) {
+                            await fetch(GOOGLE_SCRIPT_URL, {
+                                method: 'POST',
+                                body: JSON.stringify({ action: 'updateConfig', config: this.config })
+                            });
+                        } else {
+                            this.saveLocalFallback();
+                        }
+                        this.showToast('¡Textos actualizados con éxito!');
+                    } catch (e) {
+                        this.showToast('Hubo un error al guardar.', 'error');
+                    }
                     this.isSavingConfig = false;
                 },
 
                 async updateStatus(app) {
-                    await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'updateStatus', rowIndex: app.rowIndex, status: app.status }) });
+                    if (this.isBackendConnected()) {
+                        await fetch(GOOGLE_SCRIPT_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({ action: 'updateStatus', rowIndex: app.rowIndex, status: app.status })
+                        });
+                    } else {
+                        this.saveLocalFallback();
+                    }
+                    this.showToast('Estado actualizado.');
                 },
 
                 async deleteAppointment(app) {
-                    if(confirm("¿Borrar este turno definitivamente?")) {
-                        await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'delete', rowIndex: app.rowIndex }) });
-                        this.appointments = this.appointments.filter(a => a.rowIndex !== app.rowIndex);
+                    this.appointments = this.appointments.filter(a => a.rowIndex !== app.rowIndex);
+                    if (this.isBackendConnected()) {
+                        await fetch(GOOGLE_SCRIPT_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({ action: 'delete', rowIndex: app.rowIndex })
+                        });
+                    } else {
+                        this.saveLocalFallback();
                     }
+                    this.showToast('Turno eliminado.');
                 }
             }
         }
